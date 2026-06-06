@@ -2,6 +2,7 @@ package com.henryelvis;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserType;
@@ -42,7 +43,7 @@ public class PlaywrightService implements AutoCloseable
         return count;
     }
 
-    public List<Locator> GetLocators(String _locatorType, int _count)
+    public List<Locator> GetLocators(String _locatorType)
     {
         if (page == null) 
             throw new IllegalStateException("Page is not initialized. Call Navigate() first.");
@@ -56,14 +57,76 @@ public class PlaywrightService implements AutoCloseable
         if (locatorCount <= 0) 
             throw new IllegalStateException("No locators found for the specified locator type: " + _locatorType);
 
-        locatorCount = Math.min(locatorCount, _count);
-
         List<Locator> locators = new ArrayList<>();
 
         for (int i = 0; i < locatorCount; i++) 
             locators.add(locatorsElement.nth(i));
 
-        return locators;
+        return RemoveHiddenElements(locators);
+    }
+
+    private List<Locator> RemoveHiddenElements(List<Locator> _locators)
+    {
+        List<Locator> visibleLocators = new ArrayList<>();
+
+        for (Locator locator : _locators)
+        {
+            if (locator.isVisible())
+                visibleLocators.add(locator);
+        }
+
+        return visibleLocators;
+    }
+
+    public Locator GetTargetLocator(List<Locator> _visibleLocators, Scanner _scanner)
+    {
+        if (_visibleLocators.isEmpty()) 
+            throw new IllegalStateException("No locators found for the specified locator type");
+
+        if (_visibleLocators.size() == 1)
+            return _visibleLocators.get(0);
+
+        System.out.println("### ÉLÉMENTS VISIBLES DÉTECTÉS : ###");
+        System.out.println("--------------------------------------------------------------------------------");
+
+        for (int i = 0; i < _visibleLocators.size(); i++)
+        {
+            Locator element = _visibleLocators.get(i);
+
+            String id = element.getAttribute("id");
+            String name = element.getAttribute("class");
+            String placeholder = element.getAttribute("placeholder");
+            String textContent = element.innerText();
+
+            System.out.printf("[%d] - ID: %s | Name: %s | Placeholder: %s | Texte: %s\n", 
+                              (i + 1), 
+                              (id != null ? id : "N/A"), 
+                              (name != null ? name : "N/A"), 
+                              (placeholder != null ? placeholder : "N/A"),
+                              (!textContent.strip().isEmpty() ? textContent.strip() : "vide"));
+        }
+
+        System.out.println("--------------------------------------------------------------------------------");
+
+        int choice = -1;
+
+        while (choice < 1 || choice > _visibleLocators.size())
+        {
+            System.out.println("### Multiple visible elements detected. Please select the target element by entering its number (1-" + _visibleLocators.size() + ") : ");
+
+            if (_scanner.hasNextInt())
+            {
+                choice = _scanner.nextInt();
+                _scanner.nextLine();
+            }
+            else
+            {
+                _scanner.next();
+                System.out.println("### Invalid input. Please enter a number between 1 and " + _visibleLocators.size() + " ###");
+            }
+        }
+
+        return _visibleLocators.get(choice - 1);
     }
 
     @Override

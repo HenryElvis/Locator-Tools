@@ -17,8 +17,6 @@ public class App
         String defaultLocatorType = "button";
         String defaultFormatType = "locator";
 
-        final int defaultLocatorCount = 3;
-
         System.out.println("### Extract Locators tools ###");
         System.out.println("### Enter site URL : ");
 
@@ -53,20 +51,14 @@ public class App
             LocatorGenerator locatorGenerator = new LocatorGenerator(useClaude);
             playwrightService.Navigate(URL);
 
-            // int locatorsFound = playwrightService.GetLocatorCount(locatorType);
+            List<Locator> locatorsElement = playwrightService.GetLocators(locatorType);
+            Locator targetLocator = playwrightService.GetTargetLocator(locatorsElement, scanner);
 
-            List<Locator> locatorsElement = playwrightService.GetLocators(locatorType, defaultLocatorCount);
+            String proposedPath = locatorGenerator.GenerateLocator(targetLocator, formatType, locatorType);
 
-            for (int i = 0; i < locatorsElement.size(); i++)
-            {
-                Locator locatorElement = locatorsElement.get(i);
-
-                String proposedPath = locatorGenerator.GenerateLocator(locatorElement, formatType, locatorType);
-
-                System.out.println("--- Element " + (i + 1) + " ---");
-                System.out.println("Proposed path : " + proposedPath);
-                System.out.println();
-            }
+            System.out.println("--- Element ---");
+            System.out.println("Proposed path : " + proposedPath);
+            System.out.println();
         }
         catch (Exception e) 
         {
