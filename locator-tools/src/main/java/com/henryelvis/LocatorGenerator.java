@@ -19,26 +19,40 @@ public class LocatorGenerator
         this.useClaude = useClaude;
 
         Dotenv dotenv = Dotenv.configure()
-                            .directory("./locator-tools")
                             .ignoreIfMissing()
                             .load();
+
+        if (dotenv.get("OLLAMA_MODEL") == null && dotenv.get("ANTHROPIC_API_KEY") == null) 
+        {
+            dotenv = Dotenv.configure()
+                        .directory("../")
+                        .ignoreIfMissing()
+                        .load();
+        }
         
-        if (useClaude && dotenv.get("ANTHROPIC_API_KEY") == null) 
-            useClaude = false;
+        String anthropicKey = dotenv.get("ANTHROPIC_API_KEY");
+        String claudeModel = dotenv.get("CLAUDE_MODEL", "claude-3-5-sonnet-latest");
+        String ollamaModel = dotenv.get("OLLAMA_MODEL", "qwen2.5-coder:7b");
+
+        if (useClaude && (anthropicKey == null || anthropicKey.isBlank())) 
+        {
+            System.out.println("### ANTHROPIC_API_KEY missing, using Ollama locally ###");
+            this.useClaude = false;
+        }
 
         if (useClaude)
         {
             this.claudeAIModel = AnthropicChatModel.builder()
-                        .apiKey(dotenv.get("ANTHROPIC_API_KEY"))
-                        .modelName(dotenv.get("CLAUDE_MODEL"))
-                        .temperature(GetTemp(dotenv))
+                        .apiKey(anthropicKey)
+                        .modelName(claudeModel)
+                        .temperature(0.0)
                         .build();
         }
         else
         {
             this.ollamaAIModel = OllamaChatModel.builder()
                         .baseUrl("http://localhost:11434")
-                        .modelName("qwen2.5-coder:7b")
+                        .modelName(ollamaModel)
                         .temperature(0.0)
                         .timeout(Duration.ofMinutes(5))
                         .build();
@@ -115,19 +129,5 @@ public class LocatorGenerator
             - Ne mets aucune explication, pas de blabla, pas de balises markdown de code (pas de ```).
             - Si l'élément est un %s, adapte la stratégie de localisation en conséquence.
             """.formatted(_outerHTML, _format, exemples, _tagName);
-    }
-
-    private double GetTemp(Dotenv _dotenv)
-    {
-        try 
-        {
-            return Double.parseDouble(_dotenv.get("TEMPERATURE"));
-        } 
-        catch (NumberFormatException e) 
-        {
-            System.out.println("### Invalid temperature value. Using default 0.0 ###");
-
-            return 0.0;
-        }
     }
 }
