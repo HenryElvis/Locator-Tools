@@ -7,6 +7,9 @@ import com.microsoft.playwright.Locator;
 
 public class App 
 {
+    // TODO #2: Add an option to get css selector
+    // TODO #3: Factorize code and add some summary comments for each method. Maybe add JavaDoc comments.
+
     public static void main( String[] args )
     {
         Scanner scanner = new Scanner(System.in);
