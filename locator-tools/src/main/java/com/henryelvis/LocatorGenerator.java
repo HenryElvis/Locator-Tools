@@ -1,5 +1,7 @@
 package com.henryelvis;
 
+import java.time.Duration;
+
 import com.microsoft.playwright.Locator;
 import dev.langchain4j.model.anthropic.AnthropicChatModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;
@@ -7,7 +9,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 
 public class LocatorGenerator 
 {
-    private final boolean useClaude;
+    private boolean useClaude;
 
     private AnthropicChatModel claudeAIModel;
     private OllamaChatModel ollamaAIModel;
@@ -16,34 +18,38 @@ public class LocatorGenerator
     {
         this.useClaude = useClaude;
 
-        Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
+        Dotenv dotenv = Dotenv.configure()
+                            .directory("./locator-tools")
+                            .ignoreIfMissing()
+                            .load();
         
-        if (useClaude && System.getenv("ANTHROPIC_API_KEY") == null) 
+        if (useClaude && dotenv.get("ANTHROPIC_API_KEY") == null) 
             useClaude = false;
 
         if (useClaude)
         {
             this.claudeAIModel = AnthropicChatModel.builder()
-                        .apiKey(System.getenv("ANTHROPIC_API_KEY"))
-                        .modelName(System.getenv("CLAUDE_MODEL"))
-                        .temperature(getTemp())
+                        .apiKey(dotenv.get("ANTHROPIC_API_KEY"))
+                        .modelName(dotenv.get("CLAUDE_MODEL"))
+                        .temperature(getTemp(dotenv))
                         .build();
         }
         else
         {
             this.ollamaAIModel = OllamaChatModel.builder()
                         .baseUrl("http://localhost:11434")
-                        .modelName(System.getenv("OLLAMA_MODEL"))
-                        .temperature(getTemp())
+                        .modelName("qwen2.5-coder:7b")
+                        .temperature(0.0)
+                        .timeout(Duration.ofMinutes(5))
                         .build();
         }
     }
 
     public String generateLocator(Locator _locator, String _formatType,  String _locatorName)
     {
-        String format = _formatType.trim().toLowerCase();
-
-        String outerHTML = (String) _locator.evaluate("el => el.outerHTML");
+        String response;
+        String outerHTML;
+        String format = (_formatType == null) ? "locator" : _formatType.trim().toLowerCase();
 
         if (!format.equals("xpath") && !format.equals("locator")) 
         {
@@ -51,12 +57,28 @@ public class LocatorGenerator
             format = "locator";
         }
 
+        try
+        {
+            outerHTML = (String) _locator.evaluate("el => el.outerHTML");
+        }
+        catch (Exception e)
+        {
+            return "### [ERREUR PLAYWRIGHT] Impossible de récupérer le HTML de l'élément : " + e.getMessage() + " ###";
+        }
+
         String finalPrompt = prompt(outerHTML, format, _locatorName);
 
         if (useClaude)
-            return claudeAIModel.generate(finalPrompt).trim();
+            response = claudeAIModel.generate(finalPrompt);
         else
-            return ollamaAIModel.generate(finalPrompt).trim();
+            response = ollamaAIModel.generate(finalPrompt);
+
+        if (response == null || response.isBlank()) 
+        {
+            return "### [Ollama a renvoyé du vide] Le modèle est sans doute en cours de chargement dans ta RAM, réessaie dans 30 secondes. ###";
+        }
+
+        return response.trim();
     }
 
     private String prompt(String _outerHTML, String _format, String _tagName)
@@ -75,15 +97,16 @@ public class LocatorGenerator
             """.formatted(_outerHTML, _format, _tagName);
     }
 
-    private double getTemp()
+    private double getTemp(Dotenv _dotenv)
     {
         try 
         {
-            return Double.parseDouble(System.getenv("TEMPERATURE"));
+            return Double.parseDouble(_dotenv.get("TEMPERATURE"));
         } 
         catch (NumberFormatException e) 
         {
             System.out.println("### Invalid temperature value. Using default 0.0 ###");
+
             return 0.0;
         }
     }

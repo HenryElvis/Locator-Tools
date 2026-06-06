@@ -24,27 +24,21 @@ public class App
 
         String URL = scanner.nextLine();
 
-        if (URL.isEmpty()) 
+        if (URL == null || URL.trim().isEmpty()) 
             URL = defaultURL;
 
         System.out.println("### Enter locator type (ex: button, a, input) : ");
 
         String locatorType = scanner.nextLine();
-
-        if (locatorType.isEmpty()) 
-            locatorType = defaultLocatorType;
+        if (locatorType == null || locatorType.trim().isEmpty()) locatorType = defaultLocatorType;
 
         System.out.println("### Enter format type (ex: xpath, locator) : ");
 
         String formatType = scanner.nextLine();
-
-        if (formatType.isEmpty()) 
-            formatType = defaultFormatType;
+        if (formatType == null || formatType.trim().isEmpty()) formatType = defaultFormatType;
 
         System.out.println("### ------------------- ###");
-
         System.out.println("### Extracting locators from '" + URL + "' with locator type '" + locatorType + "' and format type '" + formatType + "' ###");
-
         System.out.println("### ------------------- ###");
 
         try (PlaywrightService playwrightService = new PlaywrightService())

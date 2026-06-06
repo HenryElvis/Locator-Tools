@@ -26,6 +26,8 @@ public class PlaywrightService implements AutoCloseable
         this.page = browser.newPage();
         this.page.navigate(_url);
         this.page.waitForLoadState();
+
+        this.page.waitForTimeout(1000);
     }
 
     public int getLocatorCount(String _locatorType)
@@ -46,6 +48,9 @@ public class PlaywrightService implements AutoCloseable
             throw new IllegalStateException("Page is not initialized. Call navigate() first.");
 
         Locator locatorsElement = page.locator(_locatorType);
+
+        locatorsElement.first().waitFor(new Locator.WaitForOptions().setTimeout(5000));
+
         int locatorCount = locatorsElement.count();
 
         if (locatorCount <= 0) 
@@ -64,13 +69,20 @@ public class PlaywrightService implements AutoCloseable
     @Override
     public void close() 
     {
-        if (page != null)
-            page.close();
-        
-        if (browser != null)
-            browser.close();
-        
-        if (playwright != null)
-            playwright.close();
+        try
+        {
+            if (page != null)
+                page.close();
+            
+            if (browser != null)
+                browser.close();
+            
+            if (playwright != null)
+                playwright.close();
+        }
+        catch (Exception e)
+        {
+            System.out.println("### Error while closing Playwright resources: " + e.getMessage() + " ###");
+        }
     }
 }
