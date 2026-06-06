@@ -21,7 +21,7 @@ public class PlaywrightService implements AutoCloseable
         this.browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
     }
 
-    public void navigate(String _url)
+    public void Navigate(String _url)
     {
         this.page = browser.newPage();
         this.page.navigate(_url);
@@ -30,7 +30,7 @@ public class PlaywrightService implements AutoCloseable
         this.page.waitForTimeout(1000);
     }
 
-    public int getLocatorCount(String _locatorType)
+    public int GetLocatorCount(String _locatorType)
     {
         if (page == null) 
             throw new IllegalStateException("Page is not initialized. Call navigate() first.");
@@ -42,10 +42,10 @@ public class PlaywrightService implements AutoCloseable
         return count;
     }
 
-    public List<Locator> getLocators(String _locatorType, int _count)
+    public List<Locator> GetLocators(String _locatorType, int _count)
     {
         if (page == null) 
-            throw new IllegalStateException("Page is not initialized. Call navigate() first.");
+            throw new IllegalStateException("Page is not initialized. Call Navigate() first.");
 
         Locator locatorsElement = page.locator(_locatorType);
 

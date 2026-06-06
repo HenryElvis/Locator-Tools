@@ -31,7 +31,7 @@ public class LocatorGenerator
             this.claudeAIModel = AnthropicChatModel.builder()
                         .apiKey(dotenv.get("ANTHROPIC_API_KEY"))
                         .modelName(dotenv.get("CLAUDE_MODEL"))
-                        .temperature(getTemp(dotenv))
+                        .temperature(GetTemp(dotenv))
                         .build();
         }
         else
@@ -45,7 +45,7 @@ public class LocatorGenerator
         }
     }
 
-    public String generateLocator(Locator _locator, String _formatType,  String _locatorName)
+    public String GenerateLocator(Locator _locator, String _formatType,  String _locatorName)
     {
         String response;
         String outerHTML;
@@ -66,7 +66,7 @@ public class LocatorGenerator
             return "### [ERREUR PLAYWRIGHT] Impossible de récupérer le HTML de l'élément : " + e.getMessage() + " ###";
         }
 
-        String finalPrompt = prompt(outerHTML, format, _locatorName);
+        String finalPrompt = Prompt(outerHTML, format, _locatorName);
 
         if (useClaude)
             response = claudeAIModel.generate(finalPrompt);
@@ -74,15 +74,35 @@ public class LocatorGenerator
             response = ollamaAIModel.generate(finalPrompt);
 
         if (response == null || response.isBlank()) 
-        {
             return "### [Ollama a renvoyé du vide] Le modèle est sans doute en cours de chargement dans ta RAM, réessaie dans 30 secondes. ###";
-        }
 
         return response.trim();
     }
 
-    private String prompt(String _outerHTML, String _format, String _tagName)
+    private String Prompt(String _outerHTML, String _format, String _tagName)
     {
+        String exemples;
+        
+        if (_format.equals("xpath"))
+        {
+            exemples = """
+                Exemples attendus pour le format 'xpath' :
+                - //input[@id='user-name']
+                - //button[@type='submit']
+                - //div[@class='login_logo']
+                """;
+        }
+        else 
+        {
+            exemples = """
+                Exemples attendus pour le format 'locator' (API Playwright Java) :
+                - page.locator("#user-name")
+                - page.getByPlaceholder("Username")
+                - page.locator("[data-test='username']")
+                - page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Login"))
+                """;
+        }
+
         return """
             Tu es un ingénieur QA senior expert en automatisation de tests.
             Voici le code HTML d'un élément extrait d'une page web :
@@ -94,10 +114,10 @@ public class LocatorGenerator
             - Renvoie UNIQUEMENT le chemin brut (ex: //button[@id='submit'] ou page.getByText('Valider')).
             - Ne mets aucune explication, pas de blabla, pas de balises markdown de code (pas de ```).
             - Si l'élément est un %s, adapte la stratégie de localisation en conséquence.
-            """.formatted(_outerHTML, _format, _tagName);
+            """.formatted(_outerHTML, _format, exemples, _tagName);
     }
 
-    private double getTemp(Dotenv _dotenv)
+    private double GetTemp(Dotenv _dotenv)
     {
         try 
         {

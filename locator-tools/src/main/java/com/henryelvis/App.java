@@ -37,6 +37,13 @@ public class App
         String formatType = scanner.nextLine();
         if (formatType == null || formatType.trim().isEmpty()) formatType = defaultFormatType;
 
+        System.out.println("### Ollama AI model is free to use but requires local installation and setup.");
+        System.out.println("### Do you want to use Claude AI model (token required) ? (yes/no) : ");
+
+        String useClaudeInput = scanner.nextLine();
+        if (useClaudeInput != null && useClaudeInput.trim().equalsIgnoreCase("yes"))
+            useClaude = true;
+
         System.out.println("### ------------------- ###");
         System.out.println("### Extracting locators from '" + URL + "' with locator type '" + locatorType + "' and format type '" + formatType + "' ###");
         System.out.println("### ------------------- ###");
@@ -44,17 +51,17 @@ public class App
         try (PlaywrightService playwrightService = new PlaywrightService())
         {
             LocatorGenerator locatorGenerator = new LocatorGenerator(useClaude);
-            playwrightService.navigate(URL);
+            playwrightService.Navigate(URL);
 
-            // int locatorsFound = playwrightService.getLocatorCount(locatorType);
+            // int locatorsFound = playwrightService.GetLocatorCount(locatorType);
 
-            List<Locator> locatorsElement = playwrightService.getLocators(locatorType, defaultLocatorCount);
+            List<Locator> locatorsElement = playwrightService.GetLocators(locatorType, defaultLocatorCount);
 
             for (int i = 0; i < locatorsElement.size(); i++)
             {
                 Locator locatorElement = locatorsElement.get(i);
 
-                String proposedPath = locatorGenerator.generateLocator(locatorElement, formatType, locatorType);
+                String proposedPath = locatorGenerator.GenerateLocator(locatorElement, formatType, locatorType);
 
                 System.out.println("--- Element " + (i + 1) + " ---");
                 System.out.println("Proposed path : " + proposedPath);
