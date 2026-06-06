@@ -124,10 +124,10 @@ public class LocatorGenerator
         {
             exemples = """
                 Exemples attendus pour le format 'locator' (API Playwright Java) :
-                - page.locator("#user-name")
                 - page.getByPlaceholder("Username")
-                - page.locator("[data-test='username']")
                 - page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Login"))
+                - page.getByTestId("login-button")
+                - page.getByText("Valider")
                 """;
         }
 
