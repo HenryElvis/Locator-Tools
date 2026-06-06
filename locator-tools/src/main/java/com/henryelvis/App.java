@@ -11,30 +11,30 @@ public class App
     {
         Scanner scanner = new Scanner(System.in);
 
+        boolean useClaude = false;
+
         String defaultURL = "https://www.saucedemo.com/";
         String defaultLocatorType = "button";
         String defaultFormatType = "locator";
 
-        final String defaultIAModel = "claude-3-5-sonnet-latest";
-
         final int defaultLocatorCount = 3;
 
-        System.out.print("### Extract Locators tools ###");
-        System.out.print("### Enter site URL : ");
+        System.out.println("### Extract Locators tools ###");
+        System.out.println("### Enter site URL : ");
 
         String URL = scanner.nextLine();
 
         if (URL.isEmpty()) 
             URL = defaultURL;
 
-        System.out.print("### Enter locator type (ex: button, a, input) : ");
+        System.out.println("### Enter locator type (ex: button, a, input) : ");
 
         String locatorType = scanner.nextLine();
 
         if (locatorType.isEmpty()) 
             locatorType = defaultLocatorType;
 
-        System.out.print("### Enter format type (ex: xpath, locator) : ");
+        System.out.println("### Enter format type (ex: xpath, locator) : ");
 
         String formatType = scanner.nextLine();
 
@@ -49,7 +49,7 @@ public class App
 
         try (PlaywrightService playwrightService = new PlaywrightService())
         {
-            LocatorGenerator locatorGenerator = new LocatorGenerator();
+            LocatorGenerator locatorGenerator = new LocatorGenerator(useClaude);
             playwrightService.navigate(URL);
 
             // int locatorsFound = playwrightService.getLocatorCount(locatorType);

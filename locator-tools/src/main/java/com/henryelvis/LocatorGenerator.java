@@ -2,44 +2,66 @@ package com.henryelvis;
 
 import com.microsoft.playwright.Locator;
 import dev.langchain4j.model.anthropic.AnthropicChatModel;
+import dev.langchain4j.model.ollama.OllamaChatModel;
 import io.github.cdimascio.dotenv.Dotenv;
 
 public class LocatorGenerator 
 {
-    private final AnthropicChatModel aiModel;
+    private final boolean useClaude;
 
-    LocatorGenerator() 
+    private AnthropicChatModel claudeAIModel;
+    private OllamaChatModel ollamaAIModel;
+
+    public LocatorGenerator(boolean useClaude) 
     {
+        this.useClaude = useClaude;
+
         Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
         
-        String apiKey = dotenv.get("ANTHROPIC_API_KEY");
+        if (useClaude && System.getenv("ANTHROPIC_API_KEY") == null) 
+            useClaude = false;
 
-        if (apiKey == null || apiKey.isEmpty())
-            throw new IllegalStateException("### Error: ANTHROPIC_API_KEY is missing in the .env file ###");
-
-        this.aiModel = AnthropicChatModel.builder()
-                        .apiKey(apiKey)
-                        .modelName("claude-3-5-sonnet-latest")
-                        .temperature(0.0)
+        if (useClaude)
+        {
+            this.claudeAIModel = AnthropicChatModel.builder()
+                        .apiKey(System.getenv("ANTHROPIC_API_KEY"))
+                        .modelName(System.getenv("CLAUDE_MODEL"))
+                        .temperature(getTemp())
                         .build();
+        }
+        else
+        {
+            this.ollamaAIModel = OllamaChatModel.builder()
+                        .baseUrl("http://localhost:11434")
+                        .modelName(System.getenv("OLLAMA_MODEL"))
+                        .temperature(getTemp())
+                        .build();
+        }
     }
 
     public String generateLocator(Locator _locator, String _formatType,  String _locatorName)
     {
         String format = _formatType.trim().toLowerCase();
 
+        String outerHTML = (String) _locator.evaluate("el => el.outerHTML");
+
         if (!format.equals("xpath") && !format.equals("locator")) 
+        {
             System.out.println("### Invalid format type. Using 'locator' as default. ###");
             format = "locator";
+        }
 
-        return askClaude(_locator, format, _locatorName);
+        String finalPrompt = prompt(outerHTML, format, _locatorName);
+
+        if (useClaude)
+            return claudeAIModel.generate(finalPrompt).trim();
+        else
+            return ollamaAIModel.generate(finalPrompt).trim();
     }
 
-    private String askClaude(Locator element, String format, String tagName)
+    private String prompt(String _outerHTML, String _format, String _tagName)
     {
-        String outerHTML = (String) element.evaluate("el => el.outerHTML");
-
-        String prompt = """
+        return """
             Tu es un ingénieur QA senior expert en automatisation de tests.
             Voici le code HTML d'un élément extrait d'une page web :
             %s
@@ -50,8 +72,19 @@ public class LocatorGenerator
             - Renvoie UNIQUEMENT le chemin brut (ex: //button[@id='submit'] ou page.getByText('Valider')).
             - Ne mets aucune explication, pas de blabla, pas de balises markdown de code (pas de ```).
             - Si l'élément est un %s, adapte la stratégie de localisation en conséquence.
-            """.formatted(outerHTML, format, tagName);
+            """.formatted(_outerHTML, _format, _tagName);
+    }
 
-        return aiModel.generate(prompt).trim();
+    private double getTemp()
+    {
+        try 
+        {
+            return Double.parseDouble(System.getenv("TEMPERATURE"));
+        } 
+        catch (NumberFormatException e) 
+        {
+            System.out.println("### Invalid temperature value. Using default 0.0 ###");
+            return 0.0;
+        }
     }
 }
