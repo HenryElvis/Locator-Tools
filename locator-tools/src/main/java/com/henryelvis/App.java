@@ -9,6 +9,9 @@ public class App
 {
     // TODO: #2 Add an option to get css selector
     // TODO: #3 Factorize code and add some summary comments for each method. Maybe add JavaDoc comments.
+    // TODO: #4 Clipboard copy of the proposed locator
+    // TODO: #5 Remove main method and create a specific class to handle locator extraction logic
+    // TODO: #6 Add graphical interface
 
     public static void main( String[] args )
     {
@@ -39,7 +42,7 @@ public class App
         if (formatType == null || formatType.trim().isEmpty()) formatType = defaultFormatType;
 
         System.out.println("### Ollama AI model is free to use but requires local installation and setup.");
-        System.out.println("### Do you want to use Claude AI model (token required) ? (yes/no) : ");
+        System.out.println("### Do you want to use Claude AI model (paid token required) ? (yes/no) : ");
 
         String useClaudeInput = scanner.nextLine();
         if (useClaudeInput != null && useClaudeInput.trim().equalsIgnoreCase("yes"))
