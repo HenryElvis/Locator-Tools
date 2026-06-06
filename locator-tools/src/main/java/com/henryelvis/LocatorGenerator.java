@@ -93,6 +93,20 @@ public class LocatorGenerator
         return response.trim();
     }
 
+    public String AutoCorrectLocator(Locator _locator, String _proposedPath, String _format, String _type)
+    {
+        String response;
+        String element = (String) _locator.evaluate("el => el.outerHTML");
+        String finalPrompt = PromptAutoCorrection(element, _proposedPath, _format, _type);
+
+        if (useClaude)
+            response = claudeAIModel.generate(finalPrompt);
+        else
+            response = ollamaAIModel.generate(finalPrompt);
+
+        return response.trim();
+    }
+
     private String Prompt(String _outerHTML, String _format, String _tagName)
     {
         String exemples;
@@ -124,10 +138,33 @@ public class LocatorGenerator
             
             Génère le chemin le plus robuste, stable et court possible pour cibler cet élément en utilisant le format : %s.
             
+            %s
+            
             CONSIGNES STRICTES :
-            - Renvoie UNIQUEMENT le chemin brut (ex: //button[@id='submit'] ou page.getByText('Valider')).
-            - Ne mets aucune explication, pas de blabla, pas de balises markdown de code (pas de ```).
+            - Renvoie UNIQUEMENT le chemin brut.
+            - Ne mets aucune explication, pas de blabla, pas de balises markdown.
             - Si l'élément est un %s, adapte la stratégie de localisation en conséquence.
             """.formatted(_outerHTML, _format, exemples, _tagName);
+    }
+
+    private String PromptAutoCorrection(String _outerHTML, String _path, String _format, String _tagName)
+    {
+        return """
+            Le chemin que tu as généré ne cible pas de manière unique l'élément sur la page.
+            Voici le code HTML de l'élément à cibler :
+            %s
+            
+            Voici le chemin incorrect que tu as généré :
+            %s
+            
+            Consigne :
+            1. Le format attendu est : %s
+            2. Le type de balise est : %s
+            
+            Corrige le chemin pour qu'il soit unique et précis. 
+            SI LE PRÉCÉDENT CHEMIN ÉTAIT TROP LARGE, utilise un parent ou un attribut plus discriminant.
+            SI LE PRÉCÉDENT CHEMIN NE TROUVAIT RIEN, utilise un sélecteur plus générique.
+            Réponds UNIQUEMENT avec le nouveau locator.
+            """.formatted(_outerHTML, _path, _format, _tagName);
     }
 }

@@ -56,15 +56,45 @@ public class App
 
             String proposedPath = locatorGenerator.GenerateLocator(targetLocator, formatType, locatorType);
 
-            if (playwrightService.IsElementUnique(proposedPath)) 
+            if (formatType.trim().equalsIgnoreCase("xpath"))
+            {
+                if (playwrightService.IsElementUnique(proposedPath)) 
+                {
+                    System.out.println("--- Element ---");
+                    System.out.println("Proposed path : " + proposedPath);
+                    System.out.println();
+                } 
+                else 
+                {
+                    System.out.println("### Warning: The proposed locator is not unique on the page. Agent will consider refining it. ###");
+
+                    int attemps = 0;
+
+                    while (!playwrightService.IsElementUnique(proposedPath) && attemps < 5)
+                    {
+                        proposedPath = locatorGenerator.AutoCorrectLocator(targetLocator, proposedPath, formatType, locatorType);
+                        attemps++;
+                    }
+
+                    if (playwrightService.IsElementUnique(proposedPath)) 
+                    {
+                        System.out.println("--- Element ---");
+                        System.out.println("Proposed path : " + proposedPath);
+                        System.out.println();
+                    } 
+                    else 
+                    {
+                        System.out.println("### Failed to generate a unique locator after " + attemps + " attempts. Please review the proposed locator: " + proposedPath + " ###");
+                    }
+                }
+            }
+            else
             {
                 System.out.println("--- Element ---");
                 System.out.println("Proposed path : " + proposedPath);
                 System.out.println();
-            } 
-            else 
-            {
-                System.out.println("### Warning: The proposed locator is not unique on the page. Consider refining it. ###");
+
+                // TODO #1 : Find a way to check if playwright locator is unique. Maybe ask user if he wants to call AutoCorrectLocator until it's unique or user is satisfied with the proposed locator.
             }
         }
         catch (Exception e) 
