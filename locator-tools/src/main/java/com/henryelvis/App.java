@@ -15,6 +15,8 @@ public class App
         String defaultLocatorType = "button";
         String defaultFormatType = "locator";
 
+        final String defaultIAModel = "claude-3-5-sonnet-latest";
+
         final int defaultLocatorCount = 3;
 
         System.out.print("### Extract Locators tools ###");
@@ -47,13 +49,31 @@ public class App
 
         try (PlaywrightService playwrightService = new PlaywrightService())
         {
+            LocatorGenerator locatorGenerator = new LocatorGenerator();
             playwrightService.navigate(URL);
 
-            int locatorsFound = playwrightService.getLocatorCount(locatorType);
+            // int locatorsFound = playwrightService.getLocatorCount(locatorType);
 
             List<Locator> locatorsElement = playwrightService.getLocators(locatorType, defaultLocatorCount);
 
-            
+            for (int i = 0; i < locatorsElement.size(); i++)
+            {
+                Locator locatorElement = locatorsElement.get(i);
+
+                String proposedPath = locatorGenerator.generateLocator(locatorElement, formatType, locatorType);
+
+                System.out.println("--- Element " + (i + 1) + " ---");
+                System.out.println("Proposed path : " + proposedPath);
+                System.out.println();
+            }
+        }
+        catch (Exception e) 
+        {
+            System.out.println("### An error occurred: " + e.getMessage() + " ###");
+        }
+        finally 
+        {
+            scanner.close();
         }
     }
 }
