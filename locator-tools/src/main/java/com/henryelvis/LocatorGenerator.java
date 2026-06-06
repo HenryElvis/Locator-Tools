@@ -109,42 +109,24 @@ public class LocatorGenerator
 
     private String Prompt(String _outerHTML, String _format, String _tagName)
     {
-        String exemples;
-        
-        if (_format.equals("xpath"))
-        {
-            exemples = """
-                Exemples attendus pour le format 'xpath' :
-                - //input[@id='user-name']
-                - //button[@type='submit']
-                - //div[@class='login_logo']
-                """;
-        }
-        else 
-        {
-            exemples = """
-                Exemples attendus pour le format 'locator' (API Playwright Java) :
-                - page.getByPlaceholder("Username")
-                - page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Login"))
-                - page.getByTestId("login-button")
-                - page.getByText("Valider")
-                """;
-        }
-
-        return """
+        return """            
             Tu es un ingénieur QA senior expert en automatisation de tests.
             Voici le code HTML d'un élément extrait d'une page web :
             %s
             
             Génère le chemin le plus robuste, stable et court possible pour cibler cet élément en utilisant le format : %s.
             
-            %s
+            <strategies>
+                %s
+            </strategies>
             
             CONSIGNES STRICTES :
-            - Renvoie UNIQUEMENT le chemin brut.
-            - Ne mets aucune explication, pas de blabla, pas de balises markdown.
-            - Si l'élément est un %s, adapte la stratégie de localisation en conséquence.
-            """.formatted(_outerHTML, _format, exemples, _tagName);
+            - Si le format est 'locator', utilise EXCLUSIVEMENT les méthodes de l'API Playwright Java (getByRole, getByPlaceholder, filter, etc.).
+            - Si l'élément est dans une liste ou un conteneur répétitif, N'UTILISE PAS d'index (.first(), .nth()). Utilise obligatoirement la méthode .filter() avec un texte ou un attribut unique.
+            - Renvoie UNIQUEMENT la ligne de code.
+            - PAS de blabla, PAS de balises markdown (```).
+            - Si l'élément est un %s, adapte la stratégie en conséquence.
+            """.formatted(_outerHTML, _format, GetExamples(_format), _tagName);
     }
 
     private String PromptAutoCorrection(String _outerHTML, String _path, String _format, String _tagName)
@@ -166,5 +148,40 @@ public class LocatorGenerator
             SI LE PRÉCÉDENT CHEMIN NE TROUVAIT RIEN, utilise un sélecteur plus générique.
             Réponds UNIQUEMENT avec le nouveau locator.
             """.formatted(_outerHTML, _path, _format, _tagName);
+    }
+
+    private String GetExamples(String _format)
+    {
+        if (_format.equals("xpath")) 
+        {
+            return """
+                Exemples attendus pour le format 'xpath' :
+                - //input[@id='user-name']
+                - //button[@type='submit']
+                - //a[contains(@href, 'contact')]
+                - //div[@class='login_logo']
+                - //span[text()='Valider']
+                - //div[@class='product' and .//h2[text()='Backpack']]
+                """;
+        } 
+        else 
+        {
+            return """
+                Exemples API Playwright (Prioriser ces méthodes par ordre de robustesse) :
+                
+                1. SÉLECTEURS SIMPLE (Accessibilité) :
+                - page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Login"))
+                - page.getByPlaceholder("Username")
+                - page.getByLabel("Password")
+                - page.getByText("Valider")
+                
+                2. FILTRAGE ET HIÉRARCHIE (Pour les listes et conteneurs) :
+                - page.locator(".cart_item").filter(new Locator.FilterOptions().setHasText("Backpack")).getByRole(AriaRole.BUTTON)
+                - page.getByRole(AriaRole.LISTITEM).filter(new Locator.FilterOptions().setHas(page.getByText("Jacket"))).getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("REMOVE"))
+                
+                3. ID TECHNIQUE :
+                - page.getByTestId("login-button")
+                """;
+        }
     }
 }
