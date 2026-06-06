@@ -9,6 +9,10 @@ modèles de langage (LLM) comme Qwen2.5-Coder (via Ollama) ou Claude 3.5 Sonnet
 (via Anthropic) pour générer automatiquement des sélecteurs (Locators Playwright
 ou XPath) robustes, stables et optimisés.
 
+L'outil propose deux modes d'exécution au choix :
+1. Un mode LOCAL et 100% GRATUIT via Ollama (modèle Qwen2.5-Coder).
+2. Un mode CLOUD et PAYANT via l'API Anthropic Claude (nécessite une clé
+   API personnelle et du crédit sur votre compte Anthropic).
 
 ## 📋 PREREQUIS
 ---------
