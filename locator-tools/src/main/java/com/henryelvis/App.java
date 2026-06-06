@@ -56,9 +56,16 @@ public class App
 
             String proposedPath = locatorGenerator.GenerateLocator(targetLocator, formatType, locatorType);
 
-            System.out.println("--- Element ---");
-            System.out.println("Proposed path : " + proposedPath);
-            System.out.println();
+            if (playwrightService.IsElementUnique(proposedPath)) 
+            {
+                System.out.println("--- Element ---");
+                System.out.println("Proposed path : " + proposedPath);
+                System.out.println();
+            } 
+            else 
+            {
+                System.out.println("### Warning: The proposed locator is not unique on the page. Consider refining it. ###");
+            }
         }
         catch (Exception e) 
         {

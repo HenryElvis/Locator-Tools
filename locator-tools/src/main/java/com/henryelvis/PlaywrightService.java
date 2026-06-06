@@ -86,7 +86,7 @@ public class PlaywrightService implements AutoCloseable
         if (_visibleLocators.size() == 1)
             return _visibleLocators.get(0);
 
-        System.out.println("### ÉLÉMENTS VISIBLES DÉTECTÉS : ###");
+        System.out.println("### VISIBLE ELEMENTS FOUNDED : ###");
         System.out.println("--------------------------------------------------------------------------------");
 
         for (int i = 0; i < _visibleLocators.size(); i++)
@@ -98,7 +98,7 @@ public class PlaywrightService implements AutoCloseable
             String placeholder = element.getAttribute("placeholder");
             String textContent = element.innerText();
 
-            System.out.printf("[%d] - ID: %s | Name: %s | Placeholder: %s | Texte: %s\n", 
+            System.out.printf("[%d] - ID: %s | Name: %s | Placeholder: %s | Text: %s\n", 
                               (i + 1), 
                               (id != null ? id : "N/A"), 
                               (name != null ? name : "N/A"), 
@@ -127,6 +127,16 @@ public class PlaywrightService implements AutoCloseable
         }
 
         return _visibleLocators.get(choice - 1);
+    }
+
+    public boolean IsElementUnique(String _locator)
+    {
+        if (page == null) 
+            throw new IllegalStateException("Page is not initialized. Call navigate() first.");
+
+        int count = page.locator(_locator).count();
+
+        return count == 1;
     }
 
     @Override
