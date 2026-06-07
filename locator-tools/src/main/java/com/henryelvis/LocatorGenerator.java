@@ -83,9 +83,9 @@ public class LocatorGenerator
         String finalPrompt = Prompt(outerHTML, format, _locatorName);
 
         if (useClaude)
-            response = claudeAIModel.generate(finalPrompt);
+            response = claudeAIModel.chat(finalPrompt);
         else
-            response = ollamaAIModel.generate(finalPrompt);
+            response = ollamaAIModel.chat(finalPrompt);
 
         if (response == null || response.isBlank()) 
             return "### [Ollama a renvoyé du vide] Le modèle est sans doute en cours de chargement dans ta RAM, réessaie dans 30 secondes. ###";
@@ -100,9 +100,9 @@ public class LocatorGenerator
         String finalPrompt = PromptAutoCorrection(element, _proposedPath, _format, _type);
 
         if (useClaude)
-            response = claudeAIModel.generate(finalPrompt);
+            response = claudeAIModel.chat(finalPrompt);
         else
-            response = ollamaAIModel.generate(finalPrompt);
+            response = ollamaAIModel.chat(finalPrompt);
 
         return response.trim();
     }
