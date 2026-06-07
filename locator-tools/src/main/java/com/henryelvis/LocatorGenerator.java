@@ -31,7 +31,7 @@ public class LocatorGenerator
         }
         
         String anthropicKey = dotenv.get("ANTHROPIC_API_KEY");
-        String claudeModel = dotenv.get("CLAUDE_MODEL", "claude-3-5-sonnet-latest");
+        String claudeModel = dotenv.get("CLAUDE_MODEL", "claude-sonnet-4-6");
         String ollamaModel = dotenv.get("OLLAMA_MODEL", "qwen2.5-coder:7b");
 
         if (useClaude && (anthropicKey == null || anthropicKey.isBlank())) 
@@ -121,11 +121,19 @@ public class LocatorGenerator
             </strategies>
             
             CONSIGNES STRICTES :
-            - Si le format est 'locator', utilise EXCLUSIVEMENT les méthodes de l'API Playwright Java (getByRole, getByPlaceholder, filter, etc.).
-            - Si l'élément est dans une liste ou un conteneur répétitif, N'UTILISE PAS d'index (.first(), .nth()). Utilise obligatoirement la méthode .filter() avec un texte ou un attribut unique.
-            - Renvoie UNIQUEMENT la ligne de code.
-            - PAS de blabla, PAS de balises markdown (```).
-            - Si l'élément est un %s, adapte la stratégie en conséquence.
+            1. SI LE FORMAT EST 'locator' :
+               - ANALYSE PRIORITAIRE : Si le HTML contient un attribut 'data-test' ou 'data-testid', UTILISE OBLIGATOIREMENT page.getByTestId("valeur").
+               - Sinon, privilégie les méthodes d'accessibilité (getByRole, getByPlaceholder, getByLabel).
+            
+            2. SI LE FORMAT EST 'xpath' :
+               - Utilise uniquement des expressions XPath standard et robustes.
+               - Priorise les attributs uniques comme @id ou @data-test (ex: //input[@data-test='login-button']).
+            
+            3. RÈGLES COMMUNES :
+               - Pour les listes ou conteneurs répétitifs, N'UTILISE JAMAIS d'index (.first(), .nth()). Utilise OBLIGATOIREMENT la méthode .filter() (si format 'locator') ou une condition XPath sur un parent/attribut unique.
+               - Renvoie UNIQUEMENT la ligne de code.
+               - PAS de blabla, PAS de texte introductif, PAS de balises markdown (```).
+               - Si l'élément est un %s, adapte la stratégie en conséquence.
             """.formatted(_outerHTML, _format, GetExamples(_format), _tagName);
     }
 
@@ -167,21 +175,19 @@ public class LocatorGenerator
         else 
         {
             return """
-                Exemples API Playwright (Prioriser ces méthodes par ordre de robustesse) :
-                
-                1. SÉLECTEURS SIMPLE (Accessibilité) :
-                - page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Login"))
-                - page.getByPlaceholder("Username")
-                - page.getByLabel("Password")
-                - page.getByText("Valider")
-                
-                2. FILTRAGE ET HIÉRARCHIE (Pour les listes et conteneurs) :
-                - page.locator(".cart_item").filter(new Locator.FilterOptions().setHasText("Backpack")).getByRole(AriaRole.BUTTON)
-                - page.getByRole(AriaRole.LISTITEM).filter(new Locator.FilterOptions().setHas(page.getByText("Jacket"))).getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("REMOVE"))
-                
-                3. ID TECHNIQUE :
-                - page.getByTestId("login-button")
-                """;
+            Exemples API Playwright (Prioriser ces méthodes par ordre de robustesse) :
+            
+            1. ID TECHNIQUE (PRIORITÉ ABSOLUE) :
+            - page.getByTestId("login-button")
+            
+            2. SÉLECTEURS D'ACCESSIBILITÉ (Si aucun testId présent) :
+            - page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Login"))
+            - page.getByPlaceholder("Username")
+            - page.getByLabel("Password")
+            
+            3. FILTRAGE ET HIÉRARCHIE (Pour les éléments répétitifs) :
+            - page.locator(".cart_item").filter(new Locator.FilterOptions().setHasText("Backpack")).getByRole(AriaRole.BUTTON)
+            """;
         }
     }
 }
