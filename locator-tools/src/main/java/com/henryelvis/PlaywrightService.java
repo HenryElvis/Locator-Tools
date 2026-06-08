@@ -120,12 +120,7 @@ public class PlaywrightService implements AutoCloseable
 
     public boolean IsElementUnique(String _locator)
     {
-        if (page == null) 
-            throw new IllegalStateException("Page is not initialized. Call navigate() first.");
-
-        int count = page.locator(_locator).count();
-
-        return count == 1;
+        return page.locator(_locator).count() == 1;
     }
 
     @Override

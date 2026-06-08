@@ -59,6 +59,13 @@ public class LocatorGenerator
         }
     }
 
+    /**
+     * 
+     * @param _locator choose by user
+     * @param _formatType can be xpath or playwright locator
+     * @param _locatorName balise for element can be button or input etc...
+     * @return the result proposed by a model
+     */
     public String GenerateLocator(Locator _locator, String _formatType,  String _locatorName)
     {
         String response;
@@ -87,12 +94,17 @@ public class LocatorGenerator
         else
             response = ollamaAIModel.chat(finalPrompt);
 
-        if (response == null || response.isBlank()) 
-            return "### [Ollama a renvoyé du vide] Le modèle est sans doute en cours de chargement dans ta RAM, réessaie dans 30 secondes. ###";
-
         return response.trim();
     }
 
+    /**
+     * 
+     * @param _locator to target
+     * @param _proposedPath 
+     * @param _format can be xpath or playwright locator
+     * @param _type of locator can be input or button etc...
+     * @return the proposed the new result for locator
+     */
     public String AutoCorrectLocator(Locator _locator, String _proposedPath, String _format, String _type)
     {
         String response;
@@ -107,6 +119,13 @@ public class LocatorGenerator
         return response.trim();
     }
 
+    /**
+     * 
+     * @param _outerHTML html code with balise
+     * @param _format can be xpath or playwright locator
+     * @param _tagName can be input or button etc...
+     * @return the prompt use for model
+     */
     private String Prompt(String _outerHTML, String _format, String _tagName)
     {
         return """            
@@ -137,6 +156,14 @@ public class LocatorGenerator
             """.formatted(_outerHTML, _format, GetExamples(_format), _tagName);
     }
 
+    /**
+     * Prompt for autocorrection
+     * @param _outerHTML html code with balise
+     * @param _path false locator
+     * @param _format can be xpath or playwright locator
+     * @param _tagName can be input or button etc...
+     * @return a prompt of correction for locator
+     */
     private String PromptAutoCorrection(String _outerHTML, String _path, String _format, String _tagName)
     {
         return """
@@ -158,6 +185,11 @@ public class LocatorGenerator
             """.formatted(_outerHTML, _path, _format, _tagName);
     }
 
+    /**
+     * Exemple of prompt for xpath and playwright locator
+     * @param _format of locator wanted, can be xpath or playwright locator
+     * @return an exemple of locator for xpath and playwrigh locator
+     */
     private String GetExamples(String _format)
     {
         if (_format.equals("xpath")) 
