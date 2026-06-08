@@ -16,10 +16,10 @@ public class PlaywrightService implements AutoCloseable
     private final Browser browser;
     private Page page;
 
-    public PlaywrightService() 
+    public PlaywrightService(boolean _headless) 
     {
         this.playwright = Playwright.create();
-        this.browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
+        this.browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(_headless));
     }
 
     public void Navigate(String _url)
@@ -29,18 +29,6 @@ public class PlaywrightService implements AutoCloseable
         this.page.waitForLoadState();
 
         this.page.waitForTimeout(1000);
-    }
-
-    public int GetLocatorCount(String _locatorType)
-    {
-        if (page == null) 
-            throw new IllegalStateException("Page is not initialized. Call navigate() first.");
-
-        int count = page.locator(_locatorType).count();
-
-        System.out.println("### Found " + count + " locators of type '" + _locatorType + "' ###");
-
-        return count;
     }
 
     public List<Locator> GetLocators(String _locatorType)
@@ -86,6 +74,7 @@ public class PlaywrightService implements AutoCloseable
         if (_visibleLocators.size() == 1)
             return _visibleLocators.get(0);
 
+        System.out.println();
         System.out.println("### VISIBLE ELEMENTS FOUNDED : ###");
         System.out.println("--------------------------------------------------------------------------------");
 
