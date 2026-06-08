@@ -7,12 +7,6 @@ import com.microsoft.playwright.Locator;
 
 public class App 
 {
-    // TODO: #2 Add an option to get css selector
-    // TODO: #3 Factorize code and add some summary comments for each method. Maybe add JavaDoc comments.
-    // TODO: #4 Clipboard copy of the proposed locator
-    // TODO: #5 Remove main method and create a specific class to handle locator extraction logic
-    // TODO: #6 Add graphical interface
-
     public static void main( String[] args )
     {
         Scanner scanner = new Scanner(System.in);

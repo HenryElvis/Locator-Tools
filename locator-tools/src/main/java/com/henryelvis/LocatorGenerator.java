@@ -36,7 +36,7 @@ public class LocatorGenerator
 
         if (useClaude && (anthropicKey == null || anthropicKey.isBlank())) 
         {
-            System.out.println("### ANTHROPIC_API_KEY missing, using Ollama locally ###");
+            System.out.println("### ANTHROPIC_API_KEY missing, try to use Ollama locally ###");
             this.useClaude = false;
         }
 
@@ -75,6 +75,7 @@ public class LocatorGenerator
         if (!format.equals("xpath") && !format.equals("locator")) 
         {
             System.out.println("### Invalid format type. Using 'locator' as default. ###");
+            
             format = "locator";
         }
 
@@ -84,7 +85,7 @@ public class LocatorGenerator
         }
         catch (Exception e)
         {
-            return "### [ERREUR PLAYWRIGHT] Impossible de récupérer le HTML de l'élément : " + e.getMessage() + " ###";
+            return e.getMessage();
         }
 
         String finalPrompt = Prompt(outerHTML, format, _locatorName);
