@@ -5,6 +5,10 @@ import java.util.Scanner;
 
 import com.microsoft.playwright.Locator;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+
 public class LocatorService 
 {
     private final PlaywrightService playwrightService;
@@ -59,7 +63,21 @@ public class LocatorService
             locatorElement = locatorGenerator.AutoCorrectLocator(_targetLocator, locatorElement, _format, _type);
         }
 
+        CopyToClipboard(locatorElement);
+
         return locatorElement;
+    }
+
+    /**
+     * Copy element
+     * @param _proposedPath locator to copy
+     */
+    private void CopyToClipboard(String _proposedPath)
+    {
+        StringSelection selection = new StringSelection(_proposedPath);
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+
+        clipboard.setContents(selection, null);
     }
 
     /**
