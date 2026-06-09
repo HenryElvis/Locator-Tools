@@ -3,6 +3,10 @@ package com.henryelvis;
 import java.util.List;
 import java.util.Scanner;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 
@@ -33,6 +37,40 @@ public class LocatorService
         activePage = _page;
     }
 
+    public String GetElementHtmlWithFilter(String _html, String _tagType, ElementData filter)
+    {
+        Document doc = Jsoup.parse(_html);
+
+        if (filter.id != null)
+        {
+            Elements element = doc.select(_tagType + "#" + filter.id);
+
+            if (!element.isEmpty())
+                return element.first().outerHtml();
+        }
+
+        StringBuilder selector = new StringBuilder(_tagType);
+
+        if (filter.className != null)
+            selector.append(".").append(filter.className);
+
+        if (filter.placeholder != null)
+            selector.append("[placeholder='").append(filter.placeholder).append("']");
+
+        if (filter.name != null)
+            selector.append("[name='").append(filter.name).append("']");
+
+        Elements elements = doc.select(selector.toString());
+
+        if (filter.textContent != null)
+            elements = new Elements(
+                elements.stream()
+                        .filter(e -> e.text().contains(filter.textContent))
+                        .toList());
+        
+        return elements.get(0).outerHtml();
+    }
+
     /**
      * 
      * @param _page
@@ -40,6 +78,11 @@ public class LocatorService
     public void AttachToPage(Page _page)
     {
         activePage = _page;
+    }
+
+    public String GetPageSnapshot()
+    {
+        return playwrightService.GetHTMLSnapshot();
     }
 
     /**
@@ -89,11 +132,20 @@ public class LocatorService
 
         boolean isPlaywrightLocator = locatorElement.contains("getBy") ||locatorElement.contains("page.");
 
-        if (!isPlaywrightLocator /*&& !playwrightService.IsElementUnique(locatorElement)*/)
+        if (!isPlaywrightLocator && !playwrightService.IsElementUnique(locatorElement))
         {
             System.out.println("--- Locator is not unique, we try to correct it---");
             locatorElement = locatorGenerator.AutoCorrectLocator(_targetLocator, locatorElement, _format, _type);
         }
+
+        CopyToClipboard(locatorElement);
+
+        return locatorElement;
+    }
+
+    public String GenerateLocator(String _outerHTML, String _formatType, String _locatorName)
+    {
+        String locatorElement = locatorGenerator.GenerateFromHtml(_outerHTML, _formatType, _locatorName);
 
         CopyToClipboard(locatorElement);
 

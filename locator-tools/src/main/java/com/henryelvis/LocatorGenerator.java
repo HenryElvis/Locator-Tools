@@ -98,6 +98,20 @@ public class LocatorGenerator
         return response.trim();
     }
 
+    public String GenerateFromHtml(String _outerHTML, String _formatType, String _locatorName) 
+    {
+        String finalPrompt = Prompt(_outerHTML, _formatType, _locatorName);
+        
+        String response;
+        
+        if (useClaude)
+            response = claudeAIModel.chat(finalPrompt);
+        else
+            response = ollamaAIModel.chat(finalPrompt);
+        
+        return response.trim();
+    }
+
     /**
      * 
      * @param _locator to target

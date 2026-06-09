@@ -1,12 +1,9 @@
 package tests;
 
-import java.util.List;
-import java.util.Scanner;
-
 import org.junit.jupiter.api.Test;
 
+import com.henryelvis.ElementData;
 import com.henryelvis.LocatorService;
-import com.microsoft.playwright.Locator;
 
 import pages.loginPage;
 import tools.baseTest;
@@ -28,18 +25,16 @@ public class loginTest extends baseTest
         loginPage.ClickOnLogin();
 
         String typeOfTargetLocator = "button";
-        
+        String formatType = "xpath";
+
+        ElementData dataFilter = new ElementData()
+            // .withId("add-to-cart-sauce-labs-bike-light")
+            .withName("add-to-cart-sauce-labs-bike-light");
+
         LocatorService tools = new LocatorService(getPage(), false, false);
-        
-        List<Locator> elements = tools.GetAvailableLocators(typeOfTargetLocator);
-
-        try (Scanner scanner = new Scanner(System.in))
-        {
-            Locator targetLocator = tools.AskForTarget(elements, scanner);
-
-            String proposedLocator = tools.GenerateLocator(targetLocator, "locator", typeOfTargetLocator);
-            System.out.println("Proposed path : " + proposedLocator);
-        }
+        String html = tools.GetPageSnapshot();
+    
+        String proposedLocator = tools.GenerateLocator(html, formatType, typeOfTargetLocator);
 
         getPage().pause();
     }
