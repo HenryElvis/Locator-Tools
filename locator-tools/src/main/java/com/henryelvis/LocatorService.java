@@ -43,7 +43,41 @@ public class LocatorService
         Elements elements = doc.getElementsByTag(_tagType);
         
         if (elements.isEmpty())
-            throw new IllegalStateException("Aucun élément trouvé pour la balise : <" + _tagType + ">");
+            throw new IllegalStateException("Element not found with : <" + _tagType + "> tag");
+        
+        return elements.get(0).outerHtml();
+    }
+
+    public String GetElementHtmlWithFilter(String _html, String _tagType, ElementData filter)
+    {
+        Document doc = Jsoup.parse(_html);
+
+        if (filter.id != null)
+        {
+            Elements element = doc.select(_tagType + "#" + filter.id);
+
+            if (!element.isEmpty())
+                return element.first().outerHtml();
+        }
+
+        StringBuilder selector = new StringBuilder(_tagType);
+
+        if (filter.className != null)
+            selector.append(".").append(filter.className);
+
+        if (filter.placeholder != null)
+            selector.append("[placeholder='").append(filter.placeholder).append("']");
+
+        if (filter.name != null)
+            selector.append("[name='").append(filter.name).append("']");
+
+        Elements elements = doc.select(selector.toString());
+
+        if (filter.textContent != null)
+            elements = new Elements(
+                elements.stream()
+                        .filter(e -> e.text().contains(filter.textContent))
+                        .toList());
         
         return elements.get(0).outerHtml();
     }

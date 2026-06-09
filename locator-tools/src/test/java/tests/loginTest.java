@@ -1,12 +1,9 @@
 package tests;
 
-import java.util.List;
-import java.util.Scanner;
-
 import org.junit.jupiter.api.Test;
 
+import com.henryelvis.ElementData;
 import com.henryelvis.LocatorService;
-import com.microsoft.playwright.Locator;
 
 import pages.loginPage;
 import tools.baseTest;
@@ -28,7 +25,10 @@ public class loginTest extends baseTest
         loginPage.ClickOnLogin();
 
         String typeOfTargetLocator = "button";
-        String formatType = "xpath";
+        String formatType = "locator";
+
+        ElementData dataFilter = new ElementData()
+            .withId("add-to-cart-sauce-labs-bike-light");
 
         LocatorService tools = new LocatorService(getPage(), false, false);
         String html = tools.GetPageSnapshot();
