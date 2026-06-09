@@ -22,6 +22,11 @@ public class PlaywrightService implements AutoCloseable
         this.browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(_headless));
     }
 
+    public void SetPage(Page _page)
+    {
+        page = _page;
+    }
+
     public void Navigate(String _url)
     {
         this.page = browser.newPage();
@@ -36,9 +41,9 @@ public class PlaywrightService implements AutoCloseable
         if (page == null) 
             throw new IllegalStateException("Page is not initialized. Call Navigate() first.");
 
-        Locator locatorsElement = page.locator(_locatorType);
+        page.waitForLoadState();
 
-        locatorsElement.first().waitFor(new Locator.WaitForOptions().setTimeout(5000));
+        Locator locatorsElement = page.locator(_locatorType);
 
         int locatorCount = locatorsElement.count();
 
@@ -78,21 +83,22 @@ public class PlaywrightService implements AutoCloseable
         System.out.println("### VISIBLE ELEMENTS FOUNDED : ###");
         System.out.println("--------------------------------------------------------------------------------");
 
-        for (int i = 0; i < _visibleLocators.size(); i++)
+        List<String> elementInfos = new ArrayList<>();
+
+        for (Locator element : _visibleLocators)
         {
-            Locator element = _visibleLocators.get(i);
+            elementInfos.add(String.format("ID: %s | Class: %s | Placeholder: %s | Text: %s", 
+                element.getAttribute("id"),
+                element.getAttribute("class"),
+                element.getAttribute("placeholder"),
+                element.innerText().strip()));
+        }
 
-            String id = element.getAttribute("id");
-            String name = element.getAttribute("class");
-            String placeholder = element.getAttribute("placeholder");
-            String textContent = element.innerText();
+        System.out.println("\n### VISIBLE ELEMENTS FOUNDED : ###");
 
-            System.out.printf("[%d] - ID: %s | Name: %s | Placeholder: %s | Text: %s\n", 
-                              (i + 1), 
-                              (id != null ? id : "N/A"), 
-                              (name != null ? name : "N/A"), 
-                              (placeholder != null ? placeholder : "N/A"),
-                              (!textContent.strip().isEmpty() ? textContent.strip() : "vide"));
+        for (int i = 0; i < elementInfos.size(); i++) 
+        {
+            System.out.println("[" + (i + 1) + "] - " + elementInfos.get(i));
         }
 
         System.out.println("--------------------------------------------------------------------------------");

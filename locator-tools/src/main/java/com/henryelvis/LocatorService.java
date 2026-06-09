@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.microsoft.playwright.Locator;
+import com.microsoft.playwright.Page;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -14,10 +15,31 @@ public class LocatorService
     private final PlaywrightService playwrightService;
     private final LocatorGenerator locatorGenerator;
 
+    private Page activePage;
+
     public LocatorService(boolean _useClaude, boolean _headless)
     {
         playwrightService = new PlaywrightService(_headless);
         locatorGenerator = new LocatorGenerator(_useClaude);
+
+        activePage = playwrightService.GetPage();
+    }
+
+    public LocatorService(Page _page, boolean _useClaude, boolean _headless)
+    {
+        this(_useClaude, _headless);
+
+        playwrightService.SetPage(_page);
+        activePage = _page;
+    }
+
+    /**
+     * 
+     * @param _page
+     */
+    public void AttachToPage(Page _page)
+    {
+        activePage = _page;
     }
 
     /**
@@ -30,6 +52,16 @@ public class LocatorService
     {
         playwrightService.Navigate(_url);
 
+        return playwrightService.GetLocators(_type);
+    }
+
+    /**
+     * 
+     * @param _type
+     * @return
+     */
+    public List<Locator> GetAvailableLocators(String _type)
+    {
         return playwrightService.GetLocators(_type);
     }
 
@@ -57,7 +89,7 @@ public class LocatorService
 
         boolean isPlaywrightLocator = locatorElement.contains("getBy") ||locatorElement.contains("page.");
 
-        if (!isPlaywrightLocator && !playwrightService.IsElementUnique(locatorElement))
+        if (!isPlaywrightLocator /*&& !playwrightService.IsElementUnique(locatorElement)*/)
         {
             System.out.println("--- Locator is not unique, we try to correct it---");
             locatorElement = locatorGenerator.AutoCorrectLocator(_targetLocator, locatorElement, _format, _type);

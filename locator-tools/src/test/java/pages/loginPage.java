@@ -7,26 +7,34 @@ public class loginPage
 {
     private final Page page;
 
+    private final Locator usernameLocator;
+    private final Locator passwordLocator;
+    private final Locator signinLocator;
+
     public loginPage(Page _page)
     {
         page = _page;
+
+        usernameLocator = page.getByTestId("username");
+        passwordLocator = page.locator("//input[@id='password']");
+        signinLocator = page.locator("//input[@data-test='login-button']");
     }
 
     public void FillUsername(String _username)
     {
-        Locator username = page.getByTestId("username");
+        Locator username = usernameLocator;
         username.fill(_username);
     }
 
     public void FillPassword(String _password)
     {
-        Locator password = page.locator("//input[@id='password']");
+        Locator password = passwordLocator;
         password.fill(_password);
     }
 
     public void ClickOnLogin()
     {
-        Locator loginBtn = page.locator("//input[@data-test='login-button']");
+        Locator loginBtn = signinLocator;
         loginBtn.click();
 
         // Locator loginBtn = page.getByTestId("login-button");
