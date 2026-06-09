@@ -25,10 +25,11 @@ public class loginTest extends baseTest
         loginPage.ClickOnLogin();
 
         String typeOfTargetLocator = "button";
-        String formatType = "locator";
+        String formatType = "xpath";
 
         ElementData dataFilter = new ElementData()
-            .withId("add-to-cart-sauce-labs-bike-light");
+            // .withId("add-to-cart-sauce-labs-bike-light")
+            .withName("add-to-cart-sauce-labs-bike-light");
 
         LocatorService tools = new LocatorService(getPage(), false, false);
         String html = tools.GetPageSnapshot();

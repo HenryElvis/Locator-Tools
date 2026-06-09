@@ -9,9 +9,7 @@ public class ElementData
     public String name;
 
     public ElementData()
-    {
-
-    }
+    {}
 
     public ElementData(String _id, String _className, String _textContent, String _placeholder, String _name)
     {

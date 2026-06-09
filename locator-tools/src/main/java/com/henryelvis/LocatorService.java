@@ -37,17 +37,6 @@ public class LocatorService
         activePage = _page;
     }
 
-    public String GetFirstElementHtml(String _html, String _tagType) 
-    {
-        Document doc = Jsoup.parse(_html);
-        Elements elements = doc.getElementsByTag(_tagType);
-        
-        if (elements.isEmpty())
-            throw new IllegalStateException("Element not found with : <" + _tagType + "> tag");
-        
-        return elements.get(0).outerHtml();
-    }
-
     public String GetElementHtmlWithFilter(String _html, String _tagType, ElementData filter)
     {
         Document doc = Jsoup.parse(_html);
@@ -143,7 +132,7 @@ public class LocatorService
 
         boolean isPlaywrightLocator = locatorElement.contains("getBy") ||locatorElement.contains("page.");
 
-        if (!isPlaywrightLocator /*&& !playwrightService.IsElementUnique(locatorElement)*/)
+        if (!isPlaywrightLocator && !playwrightService.IsElementUnique(locatorElement))
         {
             System.out.println("--- Locator is not unique, we try to correct it---");
             locatorElement = locatorGenerator.AutoCorrectLocator(_targetLocator, locatorElement, _format, _type);
