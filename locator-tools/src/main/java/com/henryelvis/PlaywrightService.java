@@ -123,6 +123,11 @@ public class PlaywrightService implements AutoCloseable
         return page.locator(_locator).count() == 1;
     }
 
+    public Page GetPage()
+    {
+        return page;
+    }
+
     @Override
     public void close() 
     {

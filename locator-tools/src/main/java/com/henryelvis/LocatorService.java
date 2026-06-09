@@ -14,7 +14,7 @@ public class LocatorService
     private final PlaywrightService playwrightService;
     private final LocatorGenerator locatorGenerator;
 
-    LocatorService(boolean _useClaude, boolean _headless)
+    public LocatorService(boolean _useClaude, boolean _headless)
     {
         playwrightService = new PlaywrightService(_headless);
         locatorGenerator = new LocatorGenerator(_useClaude);

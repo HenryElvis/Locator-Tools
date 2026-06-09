@@ -9,29 +9,39 @@ public class App
 {
     public static void main( String[] args )
     {
-        Scanner scanner = new Scanner(System.in);
-
         final String URL = "https://www.saucedemo.com/";
         final String TYPE = "input";
         final String FORMAT = "locator";
         final boolean HEADLESS = true;
+        final boolean CLAUDE = false;
 
-        LocatorService locatorService = new LocatorService(false, HEADLESS);
+        GenerateLocator(URL, FORMAT, TYPE, HEADLESS, CLAUDE);
+    }
 
-        try
+    // --------------------------
+    // saucedemo.com test Locator
+    // --------------------------
+
+    static void GenerateLocator(String _url, String _format, String _type, boolean _headless, boolean _useClaude)
+    {
+        Scanner scanner = new Scanner(System.in);
+        LocatorService locatorService = new LocatorService(_useClaude, _headless);
+
+        try 
         {
-            List<Locator> elements = locatorService.GetAvailableLocators(URL, TYPE);
+            List<Locator> elements = locatorService.GetAvailableLocators(_url, _type);
 
             Locator target = locatorService.AskForTarget(elements, scanner);
-            String proposedLocator = locatorService.GenerateLocator(target, FORMAT, TYPE);
 
-            System.out.println("Proposed locator : " + proposedLocator);
-        }
-        catch (Exception e)
+            String proposedLocator = locatorService.GenerateLocator(target, _format, _type);
+            
+            System.out.println("Locator généré : " + proposedLocator);
+        } 
+        catch (Exception e) 
         {
             System.out.println(e);
-        }
-        finally
+        } 
+        finally 
         {
             locatorService.Close();
             scanner.close();
