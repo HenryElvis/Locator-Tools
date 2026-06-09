@@ -22,6 +22,13 @@ public class PlaywrightService implements AutoCloseable
         this.browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(_headless));
     }
 
+    public PlaywrightService(Page _page, boolean _headless) 
+    {
+        this(_headless);
+
+        page = _page;
+    }
+
     public void SetPage(Page _page)
     {
         page = _page;
