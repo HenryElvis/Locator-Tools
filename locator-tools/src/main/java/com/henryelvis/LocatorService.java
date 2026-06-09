@@ -3,6 +3,10 @@ package com.henryelvis;
 import java.util.List;
 import java.util.Scanner;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 
@@ -33,6 +37,17 @@ public class LocatorService
         activePage = _page;
     }
 
+    public String GetFirstElementHtml(String _html, String _tagType) 
+    {
+        Document doc = Jsoup.parse(_html);
+        Elements elements = doc.getElementsByTag(_tagType);
+        
+        if (elements.isEmpty())
+            throw new IllegalStateException("Aucun élément trouvé pour la balise : <" + _tagType + ">");
+        
+        return elements.get(0).outerHtml();
+    }
+
     /**
      * 
      * @param _page
@@ -40,6 +55,11 @@ public class LocatorService
     public void AttachToPage(Page _page)
     {
         activePage = _page;
+    }
+
+    public String GetPageSnapshot()
+    {
+        return playwrightService.GetHTMLSnapshot();
     }
 
     /**
@@ -94,6 +114,15 @@ public class LocatorService
             System.out.println("--- Locator is not unique, we try to correct it---");
             locatorElement = locatorGenerator.AutoCorrectLocator(_targetLocator, locatorElement, _format, _type);
         }
+
+        CopyToClipboard(locatorElement);
+
+        return locatorElement;
+    }
+
+    public String GenerateLocator(String _outerHTML, String _formatType, String _locatorName)
+    {
+        String locatorElement = locatorGenerator.GenerateFromHtml(_outerHTML, _formatType, _locatorName);
 
         CopyToClipboard(locatorElement);
 

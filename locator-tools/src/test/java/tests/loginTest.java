@@ -28,18 +28,12 @@ public class loginTest extends baseTest
         loginPage.ClickOnLogin();
 
         String typeOfTargetLocator = "button";
-        
+        String formatType = "xpath";
+
         LocatorService tools = new LocatorService(getPage(), false, false);
-        
-        List<Locator> elements = tools.GetAvailableLocators(typeOfTargetLocator);
-
-        try (Scanner scanner = new Scanner(System.in))
-        {
-            Locator targetLocator = tools.AskForTarget(elements, scanner);
-
-            String proposedLocator = tools.GenerateLocator(targetLocator, "locator", typeOfTargetLocator);
-            System.out.println("Proposed path : " + proposedLocator);
-        }
+        String html = tools.GetPageSnapshot();
+    
+        String proposedLocator = tools.GenerateLocator(html, formatType, typeOfTargetLocator);
 
         getPage().pause();
     }

@@ -36,6 +36,11 @@ public class PlaywrightService implements AutoCloseable
         this.page.waitForTimeout(1000);
     }
 
+    public String GetHTMLSnapshot()
+    {
+        return page.content();
+    }
+
     public List<Locator> GetLocators(String _locatorType)
     {
         if (page == null) 
