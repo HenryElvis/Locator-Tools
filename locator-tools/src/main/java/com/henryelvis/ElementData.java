@@ -54,6 +54,9 @@ public class ElementData
         return this;
     }
 
+    /**
+     * Name attribut
+     */
     public ElementData withName(String _name)
     {
         name = _name;
@@ -61,6 +64,11 @@ public class ElementData
         return this;
     }
 
+    /**
+     * Type of locator (input, button, a etc...)
+     * @param _type 
+     * @return
+     */
     public ElementData withType(String _type)
     {
         typeOfLocator = _type;
@@ -68,6 +76,11 @@ public class ElementData
         return this;
     }
 
+    /**
+     * Format of locator (xpath, playwright locator)
+     * @param _format
+     * @return
+     */
     public ElementData withFormat(String _format)
     {
         formatOfLocator = _format;

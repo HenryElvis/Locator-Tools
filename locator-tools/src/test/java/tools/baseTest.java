@@ -48,7 +48,7 @@ public class baseTest
         this.page.close();
     }
 
-    public Page getPage()
+    public Page GetPage()
     {
         return page;
     }

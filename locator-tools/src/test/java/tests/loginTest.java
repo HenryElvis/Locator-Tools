@@ -13,31 +13,38 @@ public class loginTest extends baseTest
     private loginPage loginPage;
 
     @Test
+    void findLocator()
+    {
+        playwright.selectors().setTestIdAttribute("data-test");
+
+        GetPage().pause();
+
+        ElementData dataFilter = new ElementData()
+            .withType("input")
+            .withFormat("locator")
+            .withId("user-name");
+
+        LocatorService tools = new LocatorService(GetPage(), false, true);
+        String html = tools.GetPageSnapshot();
+
+        String targetElement = tools.GetElementHtmlWithFilter(html, dataFilter);
+        String proposedLocator = tools.GenerateLocator(targetElement, dataFilter);
+
+        GetPage().pause();
+    }
+
+    @Test
     void testLogin()
     {
         playwright.selectors().setTestIdAttribute("data-test");
 
-        loginPage = new loginPage(getPage());
+        loginPage = new loginPage(GetPage());
 
         loginPage.FillUsername("standard_user");
         loginPage.FillPassword("secret_sauce");
 
         loginPage.ClickOnLogin();
 
-        String typeOfTargetLocator = "button";
-        String formatType = "locator";
-
-        ElementData dataFilter = new ElementData()
-            .withType("button")
-            .withFormat("xpath")
-            .withId("add-to-cart-sauce-labs-bike-light");
-
-        LocatorService tools = new LocatorService(getPage(), false, false);
-        String html = tools.GetPageSnapshot();
-
-        String targetElement = tools.GetElementHtmlWithFilter(html, dataFilter);
-        String proposedLocator = tools.GenerateLocator(targetElement, dataFilter);
-
-        getPage().pause();
+        GetPage().pause();
     }
 }
