@@ -40,6 +40,7 @@ public class productsTest extends baseTest
             .withFormat("");
 
         LocatorService tools = new LocatorService(GetPage(), false, false);
+
         String html = tools.GetPageSnapshot();
 
         String targetElement = tools.GetElementHtmlWithFilter(html, dataFilter);
