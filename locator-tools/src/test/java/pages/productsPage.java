@@ -15,8 +15,8 @@ public class productsPage
     {
         page = _page;
 
-        bagLocator = page.locator("");
-        bikeLocator = page.locator("");
+        bagLocator = page.getByTestId("add-to-cart-sauce-labs-backpack");
+        bikeLocator = page.getByTestId("add-to-cart-sauce-labs-bike-light");
         basketLocator = page.locator("");
     }
 

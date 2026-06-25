@@ -9,17 +9,15 @@ import pages.loginPage;
 import pages.productsPage;
 import tools.baseTest;
 
-public class productsTest extends baseTest 
-{
+public class productsTest extends baseTest {
     private loginPage loginPage;
     private productsPage productsPage;
-    
+
     @Test
-    void findLocator()
-    {
+    void findLocator() {
         playwright.selectors().setTestIdAttribute("data-test");
 
-        // Login 
+        // Login
         {
             playwright.selectors().setTestIdAttribute("data-test");
 
@@ -33,25 +31,24 @@ public class productsTest extends baseTest
         }
         //
 
-        GetPage().pause();
-
         ElementData dataFilter = new ElementData()
-            .withType("")
-            .withFormat("");
+                .withType("button")
+                .withFormat("locator")
+                .withName("add-to-cart-sauce-labs-bike-light");
 
-        LocatorService tools = new LocatorService(GetPage(), false, false);
+        LocatorService tools = new LocatorService(GetPage(), true, false);
         String html = tools.GetPageSnapshot();
 
         String targetElement = tools.GetElementHtmlWithFilter(html, dataFilter);
-        String proposedLocator = tools.GenerateLocator(targetElement, dataFilter);
+        
+        tools.GenerateLocator(targetElement, dataFilter);
 
         GetPage().pause();
     }
 
     @Test
-    void testAddProduct()
-    {
-        // Login 
+    void testAddProduct() {
+        // Login
         {
             playwright.selectors().setTestIdAttribute("data-test");
 
@@ -67,12 +64,13 @@ public class productsTest extends baseTest
 
         productsPage.AddBagToCart();
         productsPage.AddBikeToCart();
+
+        GetPage().pause();
     }
 
     @Test
-    void testGoToCheckout()
-    {
-        // Login 
+    void testGoToCheckout() {
+        // Login
         {
             playwright.selectors().setTestIdAttribute("data-test");
 

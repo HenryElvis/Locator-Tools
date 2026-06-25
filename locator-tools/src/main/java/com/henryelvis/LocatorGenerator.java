@@ -3,6 +3,7 @@ package com.henryelvis;
 import java.time.Duration;
 
 import com.microsoft.playwright.Locator;
+
 import dev.langchain4j.model.anthropic.AnthropicChatModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;
 import io.github.cdimascio.dotenv.Dotenv;
@@ -30,9 +31,9 @@ public class LocatorGenerator
                         .load();
         }
         
-        String anthropicKey = dotenv.get("ANTHROPIC_API_KEY");
-        String claudeModel = dotenv.get("CLAUDE_MODEL", "claude-sonnet-4-6");
-        String ollamaModel = dotenv.get("OLLAMA_MODEL", "qwen2.5-coder:7b");
+        String anthropicKey = "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";
+        String claudeModel = "claude-sonnet-4-6";
+        String ollamaModel = "wen2.5-coder:7b";
 
         if (useClaude && (anthropicKey == null || anthropicKey.isBlank())) 
         {
