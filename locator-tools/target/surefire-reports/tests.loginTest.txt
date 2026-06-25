@@ -1,17 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: tests.loginTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 10.14 s <<< FAILURE! -- in tests.loginTest
-tests.loginTest.findLocator -- Time elapsed: 3.817 s <<< ERROR!
-java.lang.IllegalArgumentException: Anthropic API key must be defined. It can be generated here: https://console.anthropic.com/settings/keys
-	at dev.langchain4j.model.anthropic.internal.client.AnthropicClient$Builder.apiKey(AnthropicClient.java:48)
-	at dev.langchain4j.model.anthropic.AnthropicChatModel.<init>(AnthropicChatModel.java:118)
-	at dev.langchain4j.model.anthropic.AnthropicChatModel$AnthropicChatModelBuilder.build(AnthropicChatModel.java:98)
-	at com.henryelvis.LocatorGenerator.<init>(LocatorGenerator.java:53)
-	at com.henryelvis.LocatorService.<init>(LocatorService.java:24)
-	at com.henryelvis.LocatorService.<init>(LocatorService.java:29)
-	at tests.loginTest.findLocator(loginTest.java:25)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
-
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 23.88 s -- in tests.loginTest

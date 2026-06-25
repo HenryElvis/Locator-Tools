@@ -18,15 +18,15 @@ public class LocatorService
     private final PlaywrightService playwrightService;
     private final LocatorGenerator locatorGenerator;
 
-    public LocatorService( boolean _useClaude, boolean _headless)
+    public LocatorService( boolean _useClaude)
     {
-        playwrightService = new PlaywrightService(_headless);
+        playwrightService = new PlaywrightService(true);
         locatorGenerator = new LocatorGenerator(_useClaude);
     }
 
-    public LocatorService(Page _page, boolean _useClaude, boolean _headless)
+    public LocatorService(Page _page, boolean _useClaude)
     {
-        this(_useClaude, _headless);
+        this(_useClaude);
 
         playwrightService.SetPage(_page);
     }

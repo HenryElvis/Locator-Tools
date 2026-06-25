@@ -34,7 +34,7 @@ public class productsTest extends baseTest {
                 .withType("button")
                 .withName("add-to-cart-sauce-labs-backpack");
 
-        LocatorService tools = new LocatorService(GetPage(), true, false);
+        LocatorService tools = new LocatorService(GetPage(), true);
         
         String html = tools.GetPageSnapshot();
         String targetElement = tools.GetElementHtmlWithFilter(html, dataFilter);
@@ -65,7 +65,7 @@ public class productsTest extends baseTest {
                 .withType("div")
                 .withId("shopping_cart_container");
 
-        LocatorService tools = new LocatorService(GetPage(), true, false);
+        LocatorService tools = new LocatorService(GetPage(), true);
         
         String html = tools.GetPageSnapshot();
         String targetElement = tools.GetElementHtmlWithFilter(html, dataFilter);

@@ -22,7 +22,7 @@ public class loginTest extends baseTest
             .withFormat("xpath")
             .withPlaceholder("Password");
 
-        LocatorService tools = new LocatorService(GetPage(), true, true);
+        LocatorService tools = new LocatorService(GetPage(), true);
         String html = tools.GetPageSnapshot();
 
         String targetElement = tools.GetElementHtmlWithFilter(html, dataFilter);

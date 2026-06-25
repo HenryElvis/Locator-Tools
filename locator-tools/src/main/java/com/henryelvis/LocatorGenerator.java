@@ -9,7 +9,7 @@ import dev.langchain4j.model.ollama.OllamaChatModel;
 
 public class LocatorGenerator 
 {
-    private boolean useClaude;
+    private final boolean useClaude;
 
     private AnthropicChatModel claudeAIModel;
     private OllamaChatModel ollamaAIModel;
