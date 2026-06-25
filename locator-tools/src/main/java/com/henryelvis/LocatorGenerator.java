@@ -31,7 +31,7 @@ public class LocatorGenerator
                         .load();
         }
         
-        String anthropicKey = "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";
+        String anthropicKey = "";
         String claudeModel = "claude-sonnet-4-6";
         String ollamaModel = "wen2.5-coder:7b";
 
