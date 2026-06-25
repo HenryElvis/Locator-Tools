@@ -7,34 +7,23 @@ public class productsPage
 {
     private final Page page;
 
-    private final Locator bagLocator;
-    private final Locator bikeLocator;
-    private final Locator basketLocator;
+    private Locator productLocator;
+    private Locator iconLocator;
 
     public productsPage(Page _page)
     {
         page = _page;
-
-        bagLocator = page.getByTestId("add-to-cart-sauce-labs-backpack");
-        bikeLocator = page.getByTestId("add-to-cart-sauce-labs-bike-light");
-        basketLocator = page.locator("");
     }
 
-    public void AddBagToCart()
+    public void AddProduct(String _product)
     {
-        Locator bagProduct = bagLocator;
-        bagProduct.click();
+        productLocator = page.locator(_product);
+        productLocator.click();
     }
 
-    public void AddBikeToCart()
+    public void ClickOnIcon(String _icon)
     {
-        Locator bikeProduct = bikeLocator;
-        bikeProduct.click();
-    }
-
-    public void CheckoutProduct()
-    {
-        Locator checkout = basketLocator;
-        checkout.click();
+        iconLocator = page.locator(_icon);
+        iconLocator.click();
     }
 }

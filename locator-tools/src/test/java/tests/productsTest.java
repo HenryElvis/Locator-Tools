@@ -14,13 +14,10 @@ public class productsTest extends baseTest {
     private productsPage productsPage;
 
     @Test
-    void findLocator() {
-        playwright.selectors().setTestIdAttribute("data-test");
-
+    void testAddBag()
+    {
         // Login
         {
-            playwright.selectors().setTestIdAttribute("data-test");
-
             loginPage = new loginPage(GetPage());
             productsPage = new productsPage(GetPage());
 
@@ -30,40 +27,20 @@ public class productsTest extends baseTest {
             loginPage.ClickOnLogin();
         }
         //
+
+        playwright.selectors().setTestIdAttribute("data-test");
 
         ElementData dataFilter = new ElementData()
                 .withType("button")
-                .withFormat("locator")
-                .withName("add-to-cart-sauce-labs-bike-light");
+                .withName("add-to-cart-sauce-labs-backpack");
 
         LocatorService tools = new LocatorService(GetPage(), true, false);
-        String html = tools.GetPageSnapshot();
-
-        String targetElement = tools.GetElementHtmlWithFilter(html, dataFilter);
         
-        tools.GenerateLocator(targetElement, dataFilter);
+        String html = tools.GetPageSnapshot();
+        String targetElement = tools.GetElementHtmlWithFilter(html, dataFilter);
+        String proposedLocator = tools.GenerateLocator(targetElement, dataFilter);
 
-        GetPage().pause();
-    }
-
-    @Test
-    void testAddProduct() {
-        // Login
-        {
-            playwright.selectors().setTestIdAttribute("data-test");
-
-            loginPage = new loginPage(GetPage());
-            productsPage = new productsPage(GetPage());
-
-            loginPage.FillUsername("standard_user");
-            loginPage.FillPassword("secret_sauce");
-
-            loginPage.ClickOnLogin();
-        }
-        //
-
-        productsPage.AddBagToCart();
-        productsPage.AddBikeToCart();
+        productsPage.AddProduct(proposedLocator);
 
         GetPage().pause();
     }
@@ -72,8 +49,6 @@ public class productsTest extends baseTest {
     void testGoToCheckout() {
         // Login
         {
-            playwright.selectors().setTestIdAttribute("data-test");
-
             loginPage = new loginPage(GetPage());
             productsPage = new productsPage(GetPage());
 
@@ -84,6 +59,20 @@ public class productsTest extends baseTest {
         }
         //
 
-        productsPage.CheckoutProduct();
+        playwright.selectors().setTestIdAttribute("data-test");
+
+        ElementData dataFilter = new ElementData()
+                .withType("div")
+                .withId("shopping_cart_container");
+
+        LocatorService tools = new LocatorService(GetPage(), true, false);
+        
+        String html = tools.GetPageSnapshot();
+        String targetElement = tools.GetElementHtmlWithFilter(html, dataFilter);
+        String proposedLocator = tools.GenerateLocator(targetElement, dataFilter);
+
+        productsPage.ClickOnIcon(proposedLocator);
+
+        GetPage().pause();
     }
 }
