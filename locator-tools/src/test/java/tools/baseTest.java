@@ -16,12 +16,14 @@ public class baseTest
     protected static Browser browser;
     protected Page page;
 
+    protected static boolean useHeadless = false;
+
     @BeforeAll
     public static void setupBrowser()
     {
         playwright = Playwright.create();
-        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
-    } 
+        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(useHeadless));
+    }
 
     @BeforeEach
     public void launchBrowser()
