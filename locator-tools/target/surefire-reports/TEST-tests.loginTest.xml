@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="tests.loginTest" time="25.907" tests="1" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="tests.loginTest" time="10.144" tests="1" errors="1" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="25"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -15,9 +15,9 @@
     <property name="user.country" value="FR"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Eclipse Adoptium\jdk-25.0.1.8-hotspot\bin"/>
-    <property name="sun.java.command" value="C:\Users\ehenry\AppData\Local\Temp\surefire7315881638897869273\surefirebooter-20260625195811509_3.jar C:\Users\ehenry\AppData\Local\Temp\surefire7315881638897869273 2026-06-25T19-58-11_292-jvmRun1 surefire-20260625195811509_1tmp surefire_0-20260625195811509_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\ehenry\AppData\Local\Temp\surefire1889117444789607037\surefirebooter-20260625215252478_3.jar C:\Users\ehenry\AppData\Local\Temp\surefire1889117444789607037 2026-06-25T21-52-52_291-jvmRun1 surefire-20260625215252478_1tmp surefire_0-20260625215252478_2tmp"/>
     <property name="jdk.debug" value="release"/>
-    <property name="test" value="tests.loginTest#testLogin"/>
+    <property name="test" value="tests.loginTest#findLocator"/>
     <property name="surefire.test.class.path" value="C:\DEV\Locator-Tools\locator-tools\target\test-classes;C:\DEV\Locator-Tools\locator-tools\target\classes;C:\Users\ehenry\.m2\repository\com\microsoft\playwright\playwright\1.44.0\playwright-1.44.0.jar;C:\Users\ehenry\.m2\repository\com\google\code\gson\gson\2.10.1\gson-2.10.1.jar;C:\Users\ehenry\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\ehenry\.m2\repository\com\microsoft\playwright\driver\1.44.0\driver-1.44.0.jar;C:\Users\ehenry\.m2\repository\com\microsoft\playwright\driver-bundle\1.44.0\driver-bundle-1.44.0.jar;C:\Users\ehenry\.m2\repository\dev\langchain4j\langchain4j-anthropic\1.0.0-beta1\langchain4j-anthropic-1.0.0-beta1.jar;C:\Users\ehenry\.m2\repository\dev\langchain4j\langchain4j-core\1.0.0-beta1\langchain4j-core-1.0.0-beta1.jar;C:\Users\ehenry\.m2\repository\org\jspecify\jspecify\1.0.0\jspecify-1.0.0.jar;C:\Users\ehenry\.m2\repository\com\squareup\retrofit2\retrofit\2.9.0\retrofit-2.9.0.jar;C:\Users\ehenry\.m2\repository\com\squareup\retrofit2\converter-jackson\2.9.0\converter-jackson-2.9.0.jar;C:\Users\ehenry\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.18.2\jackson-databind-2.18.2.jar;C:\Users\ehenry\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.18.2\jackson-annotations-2.18.2.jar;C:\Users\ehenry\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.18.2\jackson-core-2.18.2.jar;C:\Users\ehenry\.m2\repository\com\squareup\okhttp3\okhttp\4.12.0\okhttp-4.12.0.jar;C:\Users\ehenry\.m2\repository\com\squareup\okio\okio\3.6.0\okio-3.6.0.jar;C:\Users\ehenry\.m2\repository\com\squareup\okio\okio-jvm\3.6.0\okio-jvm-3.6.0.jar;C:\Users\ehenry\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib-common\1.9.10\kotlin-stdlib-common-1.9.10.jar;C:\Users\ehenry\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib-jdk8\1.8.21\kotlin-stdlib-jdk8-1.8.21.jar;C:\Users\ehenry\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib\1.8.21\kotlin-stdlib-1.8.21.jar;C:\Users\ehenry\.m2\repository\org\jetbrains\annotations\13.0\annotations-13.0.jar;C:\Users\ehenry\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib-jdk7\1.8.21\kotlin-stdlib-jdk7-1.8.21.jar;C:\Users\ehenry\.m2\repository\com\squareup\okhttp3\okhttp-sse\4.12.0\okhttp-sse-4.12.0.jar;C:\Users\ehenry\.m2\repository\org\slf4j\slf4j-api\2.0.16\slf4j-api-2.0.16.jar;C:\Users\ehenry\.m2\repository\io\github\cdimascio\dotenv-java\3.0.0\dotenv-java-3.0.0.jar;C:\Users\ehenry\.m2\repository\dev\langchain4j\langchain4j-ollama\0.31.0\langchain4j-ollama-0.31.0.jar;C:\Users\ehenry\.m2\repository\com\squareup\retrofit2\converter-gson\2.9.0\converter-gson-2.9.0.jar;C:\Users\ehenry\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.2\junit-jupiter-api-5.10.2.jar;C:\Users\ehenry\.m2\repository\org\junit\platform\junit-platform-commons\1.10.2\junit-platform-commons-1.10.2.jar;C:\Users\ehenry\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\ehenry\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.2\junit-jupiter-engine-5.10.2.jar;C:\Users\ehenry\.m2\repository\org\junit\platform\junit-platform-engine\1.10.2\junit-platform-engine-1.10.2.jar;C:\Users\ehenry\.m2\repository\org\jsoup\jsoup\1.18.1\jsoup-1.18.1.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="user.home" value="C:\Users\ehenry"/>
@@ -31,7 +31,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\ehenry\AppData\Local\Temp\surefire7315881638897869273\surefirebooter-20260625195811509_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\ehenry\AppData\Local\Temp\surefire1889117444789607037\surefirebooter-20260625215252478_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="25.0.1+8-LTS"/>
@@ -62,5 +62,25 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="69.0"/>
   </properties>
-  <testcase name="testLogin" classname="tests.loginTest" time="20.905"/>
+  <testcase name="findLocator" classname="tests.loginTest" time="3.817">
+    <error message="Anthropic API key must be defined. It can be generated here: https://console.anthropic.com/settings/keys" type="java.lang.IllegalArgumentException"><![CDATA[java.lang.IllegalArgumentException: Anthropic API key must be defined. It can be generated here: https://console.anthropic.com/settings/keys
+	at dev.langchain4j.model.anthropic.internal.client.AnthropicClient$Builder.apiKey(AnthropicClient.java:48)
+	at dev.langchain4j.model.anthropic.AnthropicChatModel.<init>(AnthropicChatModel.java:118)
+	at dev.langchain4j.model.anthropic.AnthropicChatModel$AnthropicChatModelBuilder.build(AnthropicChatModel.java:98)
+	at com.henryelvis.LocatorGenerator.<init>(LocatorGenerator.java:53)
+	at com.henryelvis.LocatorService.<init>(LocatorService.java:24)
+	at com.henryelvis.LocatorService.<init>(LocatorService.java:29)
+	at tests.loginTest.findLocator(loginTest.java:25)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+]]></error>
+    <system-out><![CDATA[Anthropic key : null
+### ANTHROPIC_API_KEY missing, try to use Ollama locally ###
+]]></system-out>
+    <system-err><![CDATA[SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+]]></system-err>
+  </testcase>
 </testsuite>

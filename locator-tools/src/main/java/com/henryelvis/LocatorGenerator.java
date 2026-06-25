@@ -6,7 +6,6 @@ import com.microsoft.playwright.Locator;
 
 import dev.langchain4j.model.anthropic.AnthropicChatModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;
-import io.github.cdimascio.dotenv.Dotenv;
 
 public class LocatorGenerator 
 {
@@ -18,28 +17,11 @@ public class LocatorGenerator
     public LocatorGenerator(boolean useClaude) 
     {
         this.useClaude = useClaude;
-
-        Dotenv dotenv = Dotenv.configure()
-                            .ignoreIfMissing()
-                            .load();
-
-        if (dotenv.get("OLLAMA_MODEL") == null && dotenv.get("ANTHROPIC_API_KEY") == null) 
-        {
-            dotenv = Dotenv.configure()
-                        .directory("../")
-                        .ignoreIfMissing()
-                        .load();
-        }
         
         String anthropicKey = "";
+
         String claudeModel = "claude-sonnet-4-6";
         String ollamaModel = "wen2.5-coder:7b";
-
-        if (useClaude && (anthropicKey == null || anthropicKey.isBlank())) 
-        {
-            System.out.println("### ANTHROPIC_API_KEY missing, try to use Ollama locally ###");
-            this.useClaude = false;
-        }
 
         if (useClaude)
         {

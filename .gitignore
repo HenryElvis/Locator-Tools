@@ -23,6 +23,4 @@
 hs_err_pid*
 replay_pid*
 
-locator-tools/src/main/java/com/henryelvis/LocatorGenerator.java
-
 .env
