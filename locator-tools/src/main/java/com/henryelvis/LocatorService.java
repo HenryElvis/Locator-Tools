@@ -1,5 +1,8 @@
 package com.henryelvis;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.util.List;
 import java.util.Scanner;
 
@@ -10,24 +13,20 @@ import org.jsoup.select.Elements;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
-
 public class LocatorService 
 {
     private final PlaywrightService playwrightService;
     private final LocatorGenerator locatorGenerator;
 
-    public LocatorService( boolean _useClaude, boolean _headless)
+    public LocatorService( boolean _useClaude)
     {
-        playwrightService = new PlaywrightService(_headless);
+        playwrightService = new PlaywrightService(true);
         locatorGenerator = new LocatorGenerator(_useClaude);
     }
 
-    public LocatorService(Page _page, boolean _useClaude, boolean _headless)
+    public LocatorService(Page _page, boolean _useClaude)
     {
-        this(_useClaude, _headless);
+        this(_useClaude);
 
         playwrightService.SetPage(_page);
     }

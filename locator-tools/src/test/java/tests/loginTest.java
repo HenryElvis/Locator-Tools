@@ -17,20 +17,16 @@ public class loginTest extends baseTest
     {
         playwright.selectors().setTestIdAttribute("data-test");
 
-        GetPage().pause();
-
         ElementData dataFilter = new ElementData()
             .withType("input")
-            .withFormat("locator")
-            .withId("user-name");
+            .withFormat("xpath")
+            .withPlaceholder("Password");
 
-        LocatorService tools = new LocatorService(GetPage(), false, true);
+        LocatorService tools = new LocatorService(GetPage(), true);
         String html = tools.GetPageSnapshot();
 
         String targetElement = tools.GetElementHtmlWithFilter(html, dataFilter);
-        String proposedLocator = tools.GenerateLocator(targetElement, dataFilter);
-
-        GetPage().pause();
+        tools.GenerateLocator(targetElement, dataFilter);
     }
 
     @Test
@@ -40,8 +36,15 @@ public class loginTest extends baseTest
 
         loginPage = new loginPage(GetPage());
 
+        GetPage().pause();
+
         loginPage.FillUsername("standard_user");
+
+        GetPage().pause();
+
         loginPage.FillPassword("secret_sauce");
+
+        GetPage().pause();
 
         loginPage.ClickOnLogin();
 

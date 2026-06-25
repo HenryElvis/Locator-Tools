@@ -9,35 +9,29 @@ public class loginPage
 
     private final Locator usernameLocator;
     private final Locator passwordLocator;
-    private final Locator signinLocator;
+    private final Locator loginLocator;
 
     public loginPage(Page _page)
     {
         page = _page;
 
-        usernameLocator = page.getByTestId("username");
-        passwordLocator = page.locator("//input[@id='password']");
-        signinLocator = page.locator("//input[@data-test='login-button']");
+        usernameLocator = page.locator("//input[@data-test='username']");
+        passwordLocator = page.locator("//input[@data-test='password']");
+        loginLocator = page.locator("//input[@data-test='login-button']");
     }
 
     public void FillUsername(String _username)
     {
-        Locator username = usernameLocator;
-        username.fill(_username);
+        usernameLocator.fill(_username);
     }
 
     public void FillPassword(String _password)
     {
-        Locator password = passwordLocator;
-        password.fill(_password);
+        passwordLocator.fill(_password);
     }
 
     public void ClickOnLogin()
     {
-        Locator loginBtn = signinLocator;
-        loginBtn.click();
-
-        // Locator loginBtn = page.getByTestId("login-button");
-        // loginBtn.click();
+        loginLocator.click();
     }
 }

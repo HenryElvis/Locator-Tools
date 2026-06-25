@@ -3,13 +3,13 @@ package com.henryelvis;
 import java.time.Duration;
 
 import com.microsoft.playwright.Locator;
+
 import dev.langchain4j.model.anthropic.AnthropicChatModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;
-import io.github.cdimascio.dotenv.Dotenv;
 
 public class LocatorGenerator 
 {
-    private boolean useClaude;
+    private final boolean useClaude;
 
     private AnthropicChatModel claudeAIModel;
     private OllamaChatModel ollamaAIModel;
@@ -17,28 +17,11 @@ public class LocatorGenerator
     public LocatorGenerator(boolean useClaude) 
     {
         this.useClaude = useClaude;
-
-        Dotenv dotenv = Dotenv.configure()
-                            .ignoreIfMissing()
-                            .load();
-
-        if (dotenv.get("OLLAMA_MODEL") == null && dotenv.get("ANTHROPIC_API_KEY") == null) 
-        {
-            dotenv = Dotenv.configure()
-                        .directory("../")
-                        .ignoreIfMissing()
-                        .load();
-        }
         
-        String anthropicKey = dotenv.get("ANTHROPIC_API_KEY");
-        String claudeModel = dotenv.get("CLAUDE_MODEL", "claude-sonnet-4-6");
-        String ollamaModel = dotenv.get("OLLAMA_MODEL", "qwen2.5-coder:7b");
+        String anthropicKey = "";
 
-        if (useClaude && (anthropicKey == null || anthropicKey.isBlank())) 
-        {
-            System.out.println("### ANTHROPIC_API_KEY missing, try to use Ollama locally ###");
-            this.useClaude = false;
-        }
+        String claudeModel = "claude-sonnet-4-6";
+        String ollamaModel = "wen2.5-coder:7b";
 
         if (useClaude)
         {

@@ -9,7 +9,7 @@ public class ElementData
     public String name;
 
     public String typeOfLocator;
-    public String formatOfLocator;
+    public String formatOfLocator = "xpath";
 
     public ElementData()
     {}
